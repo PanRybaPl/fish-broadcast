@@ -1,0 +1,14 @@
+name: FishBroadcast
+version: 1.0
+main: pl.panryba.mc.fish.broadcast.Plugin
+commands:
+  brc:
+    permission: fish.broadcast.manage
+    usage: /<command> [reload]
+permissions:
+  fish.broadcast.manage:
+    description: Allows you to manage broadcast messages
+    default: op
+  fish.broadcast.list:
+    description: Allows messages listing
+    default: op
