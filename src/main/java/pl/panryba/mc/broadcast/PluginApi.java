@@ -4,6 +4,7 @@
  */
 package pl.panryba.mc.broadcast;
 
+import java.util.Collection;
 import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -23,5 +24,25 @@ class PluginApi {
 
     void broadcast() {
         this.broadcaster.broadcast();
+    }
+
+    Collection<String> getFormattedMessages() {
+        return this.broadcaster.getFormattedMessages();
+    }
+
+    List<String> getMessages() {
+        return this.broadcaster.getMessages();
+    }
+
+    void addMessage(String message) {
+        this.broadcaster.addMessage(message);
+    }
+
+    void removeMessage(int index) {
+        this.broadcaster.removeMessage(index);
+    }
+
+    void editMessage(int index, String message) {
+        this.broadcaster.editMessage(index, message);
     }
 }

@@ -1,6 +1,7 @@
 package pl.panryba.mc.broadcast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,5 +38,32 @@ class Broadcaster {
         message = message.replaceAll("(?i)&r", ChatColor.RESET.toString());
 
         return message;
+    }
+
+    Collection<String> getFormattedMessages() {
+        List<String> result = new ArrayList<>(this.messages.size());
+        
+        for(String message : this.messages) {
+            result.add(replaceColors(message));
+        }
+        
+        return result;
+    }
+
+    List<String> getMessages() {
+        return this.messages;
+    }
+
+    void addMessage(String message) {
+        this.messages.add(message);
+    }
+
+    void removeMessage(int index) {
+        this.messages.remove(index);
+    }
+
+    void editMessage(int index, String message) {
+        this.messages.remove(index);
+        this.messages.add(index, message);
     }
 }
