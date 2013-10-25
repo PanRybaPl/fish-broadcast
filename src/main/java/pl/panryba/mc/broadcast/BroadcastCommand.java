@@ -54,6 +54,13 @@ class BroadcastCommand implements CommandExecutor {
             case "reload":
                 handleReload(cs);
                 break;
+            case "delay":
+                if(strings.length < 2) {
+                    return false;
+                }
+                
+                handleDelay(cs, strings[1]);
+                break;
             default:
                 return false;
         }
@@ -164,5 +171,12 @@ class BroadcastCommand implements CommandExecutor {
         
         this.plugin.editMessage(index, message);
         cs.sendMessage("Selected Fish Broadcast message has been modified");
+    }
+
+    private void handleDelay(CommandSender cs, String string) {
+        int newDelay = Integer.parseInt(string);
+        this.plugin.changeDelay(newDelay);
+        
+        cs.sendMessage("Fish Broadcast delay has been changed");
     }
 }

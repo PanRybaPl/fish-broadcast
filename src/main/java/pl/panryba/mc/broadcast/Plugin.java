@@ -33,6 +33,23 @@ public class Plugin extends JavaPlugin {
         updateMessagesConfig();
     }
 
+    void changeDelay(int newDelay) {
+        FileConfiguration config = getConfig();
+        config.set("delay", newDelay);
+        
+        this.saveConfig();
+        
+        stopBroadcast();
+        setupPeriodicBroadcast(newDelay);
+    }
+
+    private void stopBroadcast() {
+        if(this.broadcastTask != null) {
+            this.broadcastTask.cancel();
+            this.broadcastTask = null;
+        }
+    }
+
     private class BroadcastRunnable implements Runnable {
         private final PluginApi api;
         
@@ -61,10 +78,7 @@ public class Plugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if(this.broadcastTask != null) {
-            this.broadcastTask.cancel();
-            this.broadcastTask = null;
-        }
+        stopBroadcast();
     }
     
     public int reloadMessages() {
