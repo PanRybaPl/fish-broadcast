@@ -3,7 +3,6 @@ package pl.panryba.mc.broadcast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,10 +11,12 @@ class BroadcastCommand implements CommandExecutor {
 
     private final Plugin plugin;
     private final PluginApi api;
+    private final LanguageStrings strings;
 
-    public BroadcastCommand(Plugin plugin, PluginApi api) {
+    public BroadcastCommand(Plugin plugin, PluginApi api, LanguageStrings strings) {
         this.api = api;
         this.plugin = plugin;
+        this.strings = strings;
     }
 
     @Override
@@ -74,12 +75,12 @@ class BroadcastCommand implements CommandExecutor {
         }
 
         int count = this.plugin.reloadMessages();
-        cs.sendMessage(ChatColor.YELLOW + "Broadcast reloaded - " + count + " messages in total");
+        cs.sendMessage(this.strings.getReloaded(count));
     }
 
     private boolean checkManagePermission(CommandSender cs) {
         if (!cs.hasPermission("fish.broadcast.manage")) {
-            cs.sendMessage(ChatColor.RED + "You have no permission to manage broadcasts");
+            cs.sendMessage(this.strings.getNoPermissionToManage());
             return false;
         }
 
@@ -88,7 +89,7 @@ class BroadcastCommand implements CommandExecutor {
 
     private boolean checkListPermission(CommandSender cs) {
         if (!cs.hasPermission("fish.broadcast.list")) {
-            cs.sendMessage(ChatColor.RED + "You have no permission to list broadcasts");
+            cs.sendMessage(this.strings.getNoPermissionToList());
             return false;
         }
 
@@ -103,14 +104,12 @@ class BroadcastCommand implements CommandExecutor {
         Collection<String> messages = this.api.getFormattedMessages();
         List<String> toSend = new ArrayList<>(messages.size() + 2);
 
-        toSend.add(ChatColor.YELLOW + "-- Fish Broadcast messages:");
+        toSend.add(this.strings.getListTitle());
 
         int i = 0;
         for (String message : messages) {
             toSend.add((++i) + ". " + message);
         }
-
-        toSend.add(ChatColor.YELLOW + "Use /brc remove <number> to remove message");
 
         String[] toSendArr = new String[toSend.size()];
         toSend.toArray(toSendArr);
@@ -126,7 +125,7 @@ class BroadcastCommand implements CommandExecutor {
         String message = joinStrings(strings, startIndex);
         this.plugin.addMessage(message);
 
-        cs.sendMessage("Your Fish Broadcast message has been added");
+        cs.sendMessage(this.strings.getAdded());
     }
 
     private String joinStrings(String[] strings, int startIndex) {
@@ -151,11 +150,11 @@ class BroadcastCommand implements CommandExecutor {
 
         int index = Integer.parseInt(string) - 1;
         if(!this.plugin.removeMessage(index)) {
-            cs.sendMessage("Please provide valid message index");
+            cs.sendMessage(this.strings.getInvalidIndex());
             return;
         }
 
-        cs.sendMessage("Selected Fish Broadcast message has been removed");
+        cs.sendMessage(this.strings.getRemoved());
     }
 
     private void handleEdit(CommandSender cs, String string, String[] strings, int startIndex) {
@@ -167,17 +166,17 @@ class BroadcastCommand implements CommandExecutor {
         String message = joinStrings(strings, startIndex);
         
         if(!this.plugin.editMessage(index, message)) {
-            cs.sendMessage("Please provide valid message index and new message");
+            cs.sendMessage(this.strings.getInvalidIndex());
             return;
         }
         
-        cs.sendMessage("Selected Fish Broadcast message has been modified");
+        cs.sendMessage(this.strings.getModified());
     }
 
     private void handleDelay(CommandSender cs, String string) {
         int newDelay = Integer.parseInt(string);
         this.plugin.changeDelay(newDelay);
         
-        cs.sendMessage("Fish Broadcast delay has been changed");
+        cs.sendMessage(this.strings.getDelayChanged());
     }
 }

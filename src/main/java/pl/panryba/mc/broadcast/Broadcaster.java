@@ -30,22 +30,15 @@ class Broadcaster {
             this.current = 0;
         }
 
-        String msg = replaceColors(this.messages.get(this.current));
+        String msg = ColorUtils.replaceColors(this.messages.get(this.current));
         this.output.broadcast(msg);
-    }
-
-    private String replaceColors(String message) {
-        message = message.replaceAll("(?i)&([a-f0-9])", "\u00A7$1");
-        message = message.replaceAll("(?i)&r", ChatColor.RESET.toString());
-
-        return message;
     }
 
     Collection<String> getFormattedMessages() {
         List<String> result = new ArrayList<>(this.messages.size());
         
         for(String message : this.messages) {
-            result.add(replaceColors(message));
+            result.add(ColorUtils.replaceColors(message));
         }
         
         return result;

@@ -1,8 +1,16 @@
 package pl.panryba.mc.broadcast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -81,7 +89,30 @@ public class Plugin extends JavaPlugin {
         int delay = config.getInt("delay", 20);
         setupPeriodicBroadcast(delay);
         
-        getCommand("brc").setExecutor(new BroadcastCommand(this, api));
+        String locale = config.getString("locale", "en");
+        
+        YamlConfiguration defaultConfig = new YamlConfiguration();
+        InputStream defaultStream = getResource("default_messages.yml");
+        
+        try {
+            defaultConfig.load(defaultStream);
+        } catch (IOException | InvalidConfigurationException ex) {
+            Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        YamlConfiguration messagesConfig = new YamlConfiguration();
+        File messagesFile = new File(getDataFolder(), "messages_" + locale + ".yml");
+        
+        try {
+            messagesConfig.load(messagesFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | InvalidConfigurationException ex) {
+            Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        LanguageStrings strings = new LanguageStrings(messagesConfig, defaultConfig);
+        getCommand("brc").setExecutor(new BroadcastCommand(this, api, strings));
     }
 
     @Override
