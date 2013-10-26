@@ -118,17 +118,14 @@ class BroadcastCommand implements CommandExecutor {
         cs.sendMessage(toSendArr);
     }
 
-    private void internalAdd(CommandSender cs, String[] strings, int startIndex) {
+    private void handleAdd(CommandSender cs, String[] strings, int startIndex) {
         if (!checkManagePermission(cs)) {
             return;
         }
 
         String message = joinStrings(strings, startIndex);
         this.plugin.addMessage(message);
-    }
 
-    private void handleAdd(CommandSender cs, String[] strings, int startIndex) {
-        internalAdd(cs, strings, startIndex);
         cs.sendMessage("Your Fish Broadcast message has been added");
     }
 
@@ -147,17 +144,17 @@ class BroadcastCommand implements CommandExecutor {
         return sb.toString();
     }
 
-    private void internalRemove(CommandSender cs, String string) {
+    private void handleRemove(CommandSender cs, String string) {
         if (!checkManagePermission(cs)) {
             return;
         }
 
         int index = Integer.parseInt(string) - 1;
-        this.plugin.removeMessage(index);
-    }
+        if(!this.plugin.removeMessage(index)) {
+            cs.sendMessage("Please provide valid message index");
+            return;
+        }
 
-    private void handleRemove(CommandSender cs, String string) {
-        internalRemove(cs, string);
         cs.sendMessage("Selected Fish Broadcast message has been removed");
     }
 
@@ -169,7 +166,11 @@ class BroadcastCommand implements CommandExecutor {
         int index = Integer.parseInt(string) - 1;
         String message = joinStrings(strings, startIndex);
         
-        this.plugin.editMessage(index, message);
+        if(!this.plugin.editMessage(index, message)) {
+            cs.sendMessage("Please provide valid message index and new message");
+            return;
+        }
+        
         cs.sendMessage("Selected Fish Broadcast message has been modified");
     }
 

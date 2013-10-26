@@ -3,15 +3,16 @@ package pl.panryba.mc.broadcast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 class Broadcaster {
 
     private List<String> messages;
     private int current;
+    private final BroadcastOutput output;
 
-    public Broadcaster() {
+    public Broadcaster(BroadcastOutput output) {
+        this.output = output;
         this.current = -1;
         this.messages = new ArrayList<>();
     }
@@ -30,7 +31,7 @@ class Broadcaster {
         }
 
         String msg = replaceColors(this.messages.get(this.current));
-        Bukkit.broadcastMessage(msg);
+        this.output.broadcast(msg);
     }
 
     private String replaceColors(String message) {
@@ -54,16 +55,35 @@ class Broadcaster {
         return this.messages;
     }
 
-    void addMessage(String message) {
-        this.messages.add(message);
+    boolean addMessage(String message) {
+        if(message == null) {
+            return false;
+        }
+        
+        if(message.equals("")) {
+            return false;
+        }
+        
+        return this.messages.add(message);
     }
 
-    void removeMessage(int index) {
+    boolean removeMessage(int index) {
+        if(index < 0 || index >= this.messages.size()) {
+            return false;
+        }
+        
         this.messages.remove(index);
+        return true;
     }
 
-    void editMessage(int index, String message) {
+    boolean editMessage(int index, String message) {
+        if(index < 0 || index >= this.messages.size()) {
+            return false;
+        }
+        
         this.messages.remove(index);
         this.messages.add(index, message);
+        
+        return true;
     }
 }

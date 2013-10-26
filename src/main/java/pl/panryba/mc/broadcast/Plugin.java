@@ -16,9 +16,13 @@ public class Plugin extends JavaPlugin {
         updateMessagesConfig();
     }
 
-    void removeMessage(int index) {
-        this.api.removeMessage(index);
-        updateMessagesConfig();        
+    boolean removeMessage(int index) {
+        if(!this.api.removeMessage(index)) {
+            return false;
+        }
+        
+        updateMessagesConfig();
+        return true;
     }
 
     private void updateMessagesConfig() {
@@ -28,9 +32,13 @@ public class Plugin extends JavaPlugin {
         this.saveConfig();
     }
 
-    void editMessage(int index, String message) {
-        this.api.editMessage(index, message);
+    boolean editMessage(int index, String message) {
+        if(!this.api.editMessage(index, message)) {
+            return false;
+        }
+        
         updateMessagesConfig();
+        return true;
     }
 
     void changeDelay(int newDelay) {

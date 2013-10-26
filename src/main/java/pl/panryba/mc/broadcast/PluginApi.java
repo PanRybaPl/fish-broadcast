@@ -6,13 +6,19 @@ package pl.panryba.mc.broadcast;
 
 import java.util.Collection;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 class PluginApi {
     private final Broadcaster broadcaster;
     
     public PluginApi() {
-        this.broadcaster = new Broadcaster();
+        this.broadcaster = new Broadcaster(new BroadcastOutput() {
+            @Override
+            public void broadcast(String message) {
+                Bukkit.broadcastMessage(message);
+            }
+        });
     }
 
     int reloadMessages(FileConfiguration config) {
@@ -38,11 +44,11 @@ class PluginApi {
         this.broadcaster.addMessage(message);
     }
 
-    void removeMessage(int index) {
-        this.broadcaster.removeMessage(index);
+    boolean removeMessage(int index) {
+        return this.broadcaster.removeMessage(index);
     }
 
-    void editMessage(int index, String message) {
-        this.broadcaster.editMessage(index, message);
+    boolean editMessage(int index, String message) {
+        return this.broadcaster.editMessage(index, message);
     }
 }
