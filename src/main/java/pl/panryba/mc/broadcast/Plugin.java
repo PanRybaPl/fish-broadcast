@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.mcstats.Metrics;
 
 public class Plugin extends JavaPlugin {
     
@@ -80,7 +81,14 @@ public class Plugin extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {                
+    public void onEnable() {
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException ex) {
+            Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         this.api = new PluginApi();
 
         FileConfiguration config = getConfig();
