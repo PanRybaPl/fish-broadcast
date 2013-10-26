@@ -4,7 +4,7 @@
 
     <groupId>pl.panryba.mc</groupId>
     <artifactId>FishBroadcast</artifactId>
-    <version>0.1-BETA</version>
+    <version>0.9-BETA</version>
     <packaging>jar</packaging>
 
     <name>FishBroadcast</name>
