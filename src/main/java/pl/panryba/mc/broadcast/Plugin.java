@@ -35,8 +35,10 @@ public class Plugin extends JavaPlugin {
 
     private void updateMessagesConfig() {
         List<String> messages = this.api.getMessages();
+        
         FileConfiguration config = getConfig();
-        config.set("messages", messages);        
+        config.set("messages", messages);
+        
         this.saveConfig();
     }
 
@@ -90,6 +92,9 @@ public class Plugin extends JavaPlugin {
         setupPeriodicBroadcast(delay);
         
         String locale = config.getString("locale", "en");
+        if(locale == null || locale.isEmpty()) {
+            locale = "en";
+        }
         
         YamlConfiguration defaultConfig = new YamlConfiguration();
         InputStream defaultStream = getResource("default_messages.yml");
@@ -106,7 +111,7 @@ public class Plugin extends JavaPlugin {
         try {
             messagesConfig.load(messagesFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Plugin.class.getName()).log(Level.WARNING, "Could not find file: " + messagesFile);
         } catch (IOException | InvalidConfigurationException ex) {
             Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
         }
