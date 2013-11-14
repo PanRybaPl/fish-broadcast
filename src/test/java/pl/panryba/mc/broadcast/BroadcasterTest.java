@@ -1,18 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.panryba.mc.broadcast;
 
-import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 
-/**
- *
- * @author Marcin
- */
 public class BroadcasterTest {
     private Broadcaster bc;
     private TestOutput output;
@@ -70,6 +61,11 @@ public class BroadcasterTest {
         catch(Exception ex) {
             fail(ex.toString() + " has been thrown");
         }
+    }
+    
+    @Test
+    public void testBroadcastWhenEmpty() {
+        bc.broadcast();
     }
     
     @Test
