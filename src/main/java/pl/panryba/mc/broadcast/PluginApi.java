@@ -25,6 +25,10 @@ class PluginApi {
         List<String> messages = (List<String>)config.getList("messages");
         this.broadcaster.setMessages(messages);
         
+        if(messages == null) {
+            return 0;
+        }
+        
         return messages.size();
     }
 
