@@ -18,7 +18,11 @@ class Broadcaster {
     }
 
     public void setMessages(List<String> messages) {
-        this.messages = new ArrayList<>(messages);
+        if(messages == null) {
+            this.messages = new ArrayList<>();
+        } else {
+            this.messages = new ArrayList<>(messages);
+        }
     }
 
     public void broadcast() {

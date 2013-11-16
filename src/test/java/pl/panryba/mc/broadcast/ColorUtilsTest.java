@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.panryba.mc.broadcast;
 
 import org.bukkit.ChatColor;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Marcin
- */
 public class ColorUtilsTest {
     
     @Test

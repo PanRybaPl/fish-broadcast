@@ -1,15 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.panryba.mc.broadcast;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- *
- * @author Marcin
- */
 public class LanguageStrings {
     private final FileConfiguration config;
     private final FileConfiguration defaults;
