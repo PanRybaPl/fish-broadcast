@@ -4,7 +4,7 @@ main: pl.panryba.mc.broadcast.Plugin
 commands:
   brc:
     permission: fish.broadcast.manage
-    usage: /<command> [add <message> | remove <index> | edit <index> <new message> | list | reload | dalay <new delay in seconds>]
+    usage: /<command> [add <message> | remove <index> | edit <index> <new message> | list | reload | delay <new delay in seconds> | alert <period> <message>]
 permissions:
   fish.broadcast.manage:
     description: Allows you to manage broadcast messages

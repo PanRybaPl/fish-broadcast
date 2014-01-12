@@ -3,7 +3,6 @@ package pl.panryba.mc.broadcast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.bukkit.ChatColor;
 
 class Broadcaster {
 
@@ -37,6 +36,10 @@ class Broadcaster {
         String msg = ColorUtils.replaceColors(this.messages.get(this.current));
         this.output.broadcast(msg);
     }
+    
+    void broadcast(String msg) {
+        this.output.broadcast(ColorUtils.replaceColors(msg));
+    }    
 
     Collection<String> getFormattedMessages() {
         List<String> result = new ArrayList<>(this.messages.size());

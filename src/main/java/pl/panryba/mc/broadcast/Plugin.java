@@ -18,6 +18,7 @@ public class Plugin extends JavaPlugin {
     
     private PluginApi api;
     private BukkitTask broadcastTask;
+    private BukkitTask alertTask;
 
     void addMessage(String message) {
         this.api.addMessage(message);
@@ -68,6 +69,25 @@ public class Plugin extends JavaPlugin {
         }
     }
 
+    void disableAlert() {
+        if(this.alertTask == null) {
+            return;
+        }
+        
+        this.alertTask.cancel();
+        this.alertTask = null;
+    }
+
+    void enableAlert(String alertMsg, int period) {
+        this.disableAlert();
+        
+        if(period < 1)
+            period = 1;
+        
+        Runnable sendAlert = new AlertRunnable(api, alertMsg);
+        this.alertTask = Bukkit.getScheduler().runTaskTimer(this, sendAlert, 0, 20 * period);
+    }
+
     private class BroadcastRunnable implements Runnable {
         private final PluginApi api;
         
@@ -79,6 +99,21 @@ public class Plugin extends JavaPlugin {
         public void run() {
             this.api.broadcast();
         }    
+    }
+    
+    private class AlertRunnable implements Runnable {
+        private final PluginApi api;
+        private final String msg;
+        
+        public AlertRunnable(PluginApi api, String msg) {
+            this.api = api;
+            this.msg = msg;
+        }
+
+        @Override
+        public void run() {
+            this.api.alert(this.msg);
+        }
     }
 
     @Override

@@ -55,4 +55,8 @@ class PluginApi {
     boolean editMessage(int index, String message) {
         return this.broadcaster.editMessage(index, message);
     }
+
+    void alert(String msg) {
+        this.broadcaster.broadcast(msg);
+    }
 }

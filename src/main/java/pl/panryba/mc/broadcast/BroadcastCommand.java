@@ -27,6 +27,8 @@ class BroadcastCommand implements CommandExecutor {
 
         String subCmnd = strings[0];
         switch (subCmnd) {
+            case "alert":                
+                return handleAlert(cs, strings);
             case "edit":
                 if (strings.length < 3) {
                     return false;
@@ -56,10 +58,10 @@ class BroadcastCommand implements CommandExecutor {
                 handleReload(cs);
                 break;
             case "delay":
-                if(strings.length < 2) {
+                if (strings.length < 2) {
                     return false;
                 }
-                
+
                 handleDelay(cs, strings[1]);
                 break;
             default:
@@ -149,7 +151,7 @@ class BroadcastCommand implements CommandExecutor {
         }
 
         int index = Integer.parseInt(string) - 1;
-        if(!this.plugin.removeMessage(index)) {
+        if (!this.plugin.removeMessage(index)) {
             cs.sendMessage(this.strings.getInvalidIndex());
             return;
         }
@@ -164,19 +166,43 @@ class BroadcastCommand implements CommandExecutor {
 
         int index = Integer.parseInt(string) - 1;
         String message = joinStrings(strings, startIndex);
-        
-        if(!this.plugin.editMessage(index, message)) {
+
+        if (!this.plugin.editMessage(index, message)) {
             cs.sendMessage(this.strings.getInvalidIndex());
             return;
         }
-        
+
         cs.sendMessage(this.strings.getModified());
     }
 
     private void handleDelay(CommandSender cs, String string) {
         int newDelay = Integer.parseInt(string);
         this.plugin.changeDelay(newDelay);
-        
+
         cs.sendMessage(this.strings.getDelayChanged());
+    }
+
+    private boolean handleAlert(CommandSender cs, String[] strings) {
+        if(strings.length == 1) {
+            this.plugin.disableAlert();
+        } else {
+            if(strings.length < 3) {
+                return false;
+            }
+            
+            StringBuilder alertMsg = new StringBuilder();
+            int period = Integer.parseInt(strings[1]);
+            
+            for(int i = 2; i < strings.length; ++i) {
+                if(alertMsg.length() > 0) {
+                    alertMsg.append(" ");
+                }
+                alertMsg.append(strings[i]);
+            }
+            
+            this.plugin.enableAlert(alertMsg.toString(), period);
+        }
+        
+        return true;
     }
 }
