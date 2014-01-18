@@ -85,7 +85,7 @@ public class Plugin extends JavaPlugin {
             period = 1;
         
         Runnable sendAlert = new AlertRunnable(api, alertMsg);
-        this.alertTask = Bukkit.getScheduler().runTaskTimer(this, sendAlert, 0, 20 * period);
+        this.alertTask = Bukkit.getScheduler().runTaskTimerAsynchronously(this, sendAlert, 0, 20 * period);
     }
 
     private class BroadcastRunnable implements Runnable {
@@ -169,6 +169,6 @@ public class Plugin extends JavaPlugin {
     
     private void setupPeriodicBroadcast(int delay) {
         BroadcastRunnable runnable = new BroadcastRunnable(api);
-        this.broadcastTask = Bukkit.getScheduler().runTaskTimer(this, runnable, 0, 20 * delay);
+        this.broadcastTask = Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, 0, 20 * delay);
     }
 }

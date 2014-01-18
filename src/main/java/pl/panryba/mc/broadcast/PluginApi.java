@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 class PluginApi {
     private final Broadcaster broadcaster;
@@ -16,7 +17,9 @@ class PluginApi {
         this.broadcaster = new Broadcaster(new BroadcastOutput() {
             @Override
             public void broadcast(String message) {
-                Bukkit.broadcastMessage(message);
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendMessage(message);
+                }
             }
         });
     }
