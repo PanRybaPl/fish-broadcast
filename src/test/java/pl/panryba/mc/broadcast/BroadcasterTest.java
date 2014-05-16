@@ -109,7 +109,7 @@ public class BroadcasterTest {
 
     @Test
     public void testTokens() {
-        bc.addMessage("Test <existing> message <nonexisting>");
+        bc.addMessage("Test $existing$ message $nonexisting$");
 
         assertEquals(0, bc.getTokens().size());
         bc.setToken("existing", "Token");

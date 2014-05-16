@@ -30,6 +30,10 @@ class PluginApi {
         List<String> messages = (List<String>)config.getList("messages");
         Map<String, Object> tokens = readTokens(config);
 
+        char startDelimiter = config.getString("delimiters.start", "$").charAt(0);
+        char stopDelimiter = config.getString("delimiters.stop", "$").charAt(0);
+
+        this.broadcaster.setDelimiters(startDelimiter, stopDelimiter);
         this.broadcaster.setTokens(tokens);
         this.broadcaster.setMessages(messages);
         

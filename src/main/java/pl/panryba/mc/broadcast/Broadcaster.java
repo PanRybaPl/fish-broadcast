@@ -16,11 +16,23 @@ class Broadcaster {
     private int current;
     private final BroadcastOutput output;
 
+    private char startDelimiter;
+    private char stopDelimiter;
+
     public Broadcaster(BroadcastOutput output) {
         this.output = output;
         this.current = -1;
         this.messages = new ArrayList<>();
         this.tokens = new HashMap<>();
+        this.startDelimiter = '$';
+        this.stopDelimiter = '$';
+
+        resetPreparedMessages();
+    }
+
+    public void setDelimiters(char start, char stop) {
+        this.startDelimiter = start;
+        this.stopDelimiter = stop;
 
         resetPreparedMessages();
     }
@@ -88,7 +100,7 @@ class Broadcaster {
     }
 
     private String processMessage(String message) {
-        ST t = new ST(message);
+        ST t = new ST(message, this.startDelimiter, this.stopDelimiter);
 
         for(Map.Entry<String, Object> e : tokens.entrySet()) {
           t.add(e.getKey(), e.getValue());
