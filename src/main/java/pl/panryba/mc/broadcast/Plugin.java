@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -25,6 +26,18 @@ public class Plugin extends JavaPlugin {
         updateMessagesConfig();
     }
 
+    void setToken(String name, Object value) {
+        this.api.setToken(name, value);
+        updateTokensConfig();
+    }
+
+    boolean removeToken(String name) {
+        boolean result = this.api.removeToken(name);
+        updateTokensConfig();
+
+        return result;
+    }
+
     boolean removeMessage(int index) {
         if(!this.api.removeMessage(index)) {
             return false;
@@ -40,6 +53,15 @@ public class Plugin extends JavaPlugin {
         FileConfiguration config = getConfig();
         config.set("messages", messages);
         
+        this.saveConfig();
+    }
+
+    private void updateTokensConfig() {
+        Map<String, Object> tokens = this.api.getTokens();
+
+        FileConfiguration config = getConfig();
+        config.set("tokens", tokens);
+
         this.saveConfig();
     }
 

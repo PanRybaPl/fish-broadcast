@@ -106,4 +106,20 @@ public class BroadcasterTest {
         assertFalse(this.bc.getMessages().contains("Edited"));
         assertTrue(this.bc.getMessages().contains("Test message"));
     }
+
+    @Test
+    public void testTokens() {
+        bc.addMessage("Test <existing> message <nonexisting>");
+
+        assertEquals(0, bc.getTokens().size());
+        bc.setToken("existing", "Token");
+        assertEquals(1, bc.getTokens().size());
+
+        bc.broadcast();
+        assertEquals(this.output.getLastOutput(), "Test Token message ", this.output.getLastOutput());
+
+        assertTrue(bc.removeToken("existing"));
+        assertEquals(0, bc.getTokens().size());
+    }
 }
+

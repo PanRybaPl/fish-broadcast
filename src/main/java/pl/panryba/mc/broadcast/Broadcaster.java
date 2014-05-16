@@ -3,10 +3,16 @@ package pl.panryba.mc.broadcast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import org.stringtemplate.v4.ST;
 
 class Broadcaster {
 
     private List<String> messages;
+    private List<String> preparedMessages; // cached messages with processed tokens
+
+    private Map<String, Object> tokens;
     private int current;
     private final BroadcastOutput output;
 
@@ -14,6 +20,9 @@ class Broadcaster {
         this.output = output;
         this.current = -1;
         this.messages = new ArrayList<>();
+        this.tokens = new HashMap<>();
+
+        resetPreparedMessages();
     }
 
     public void setMessages(List<String> messages) {
@@ -22,30 +31,77 @@ class Broadcaster {
         } else {
             this.messages = new ArrayList<>(messages);
         }
+
+        resetPreparedMessages();
+    }
+
+    public void setTokens(Map<String, Object> tokens) {
+        if(tokens == null) {
+            this.tokens = new HashMap<>();
+        } else {
+            this.tokens = tokens;
+        }
+
+        resetPreparedMessages();
+    }
+
+    public boolean removeToken(String name) {
+        return this.tokens.remove(name) != null;
     }
 
     public void broadcast() {
-        if (++this.current >= this.messages.size()) {
-            if (this.messages.isEmpty()) {
+        prepareMessages();
+
+        if (++this.current >= this.preparedMessages.size()) {
+            if (this.preparedMessages.isEmpty()) {
                 return;
             }
 
             this.current = 0;
         }
 
-        String msg = ColorUtils.replaceColors(this.messages.get(this.current));
-        this.output.broadcast(msg);
+        this.broadcast(this.preparedMessages.get(this.current));
     }
     
     void broadcast(String msg) {
-        this.output.broadcast(ColorUtils.replaceColors(msg));
-    }    
+        this.output.broadcast(formatMessage(processMessage(msg)));
+    }
+
+    private void resetPreparedMessages() {
+        this.preparedMessages = null;
+    }
+
+    private void prepareMessages() {
+        if (this.preparedMessages != null) {
+            return;
+        }
+
+        this.preparedMessages = new ArrayList<String>();
+
+        for(String message : this.messages) {
+            this.preparedMessages.add(processMessage(message));
+        }
+    }
+
+    private String formatMessage(String message) {
+        return ColorUtils.replaceColors(message);
+    }
+
+    private String processMessage(String message) {
+        ST t = new ST(message);
+
+        for(Map.Entry<String, Object> e : tokens.entrySet()) {
+          t.add(e.getKey(), e.getValue());
+        }
+
+        return t.render();
+    }
 
     Collection<String> getFormattedMessages() {
         List<String> result = new ArrayList<>(this.messages.size());
         
         for(String message : this.messages) {
-            result.add(ColorUtils.replaceColors(message));
+            result.add(formatMessage(message));
         }
         
         return result;
@@ -53,6 +109,10 @@ class Broadcaster {
 
     List<String> getMessages() {
         return this.messages;
+    }
+
+    Map<String, Object> getTokens() {
+        return this.tokens;
     }
 
     boolean addMessage(String message) {
@@ -64,7 +124,15 @@ class Broadcaster {
             return false;
         }
         
-        return this.messages.add(message);
+        boolean result = this.messages.add(message);
+        resetPreparedMessages();
+
+        return result;
+    }
+
+    void setToken(String name, Object value) {
+        this.tokens.put(name, value);
+        resetPreparedMessages();
     }
 
     boolean removeMessage(int index) {
@@ -73,6 +141,7 @@ class Broadcaster {
         }
         
         this.messages.remove(index);
+        resetPreparedMessages();
         return true;
     }
 
@@ -83,7 +152,8 @@ class Broadcaster {
         
         this.messages.remove(index);
         this.messages.add(index, message);
-        
+
+        resetPreparedMessages();
         return true;
     }
 }

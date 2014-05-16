@@ -56,4 +56,12 @@ public class LanguageStrings {
     String getDelayChanged() {
         return getString("delay_changed");
     }
+
+    String getTokenSet(String name) {
+        return String.format(getString("token_set"), name);
+    }
+
+    String getTokenRemoved(String name) {
+        return String.format(getString("token_removed"), name);
+    }
 }

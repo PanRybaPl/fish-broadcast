@@ -51,12 +51,15 @@ class BroadcastCommand implements CommandExecutor {
 
                 handleRemove(cs, strings[1]);
                 break;
+
             case "list":
                 handleList(cs);
                 break;
+
             case "reload":
                 handleReload(cs);
                 break;
+
             case "delay":
                 if (strings.length < 2) {
                     return false;
@@ -64,6 +67,10 @@ class BroadcastCommand implements CommandExecutor {
 
                 handleDelay(cs, strings[1]);
                 break;
+
+            case "token":
+                return handleToken(cs, strings, 1);
+
             default:
                 return false;
         }
@@ -128,6 +135,29 @@ class BroadcastCommand implements CommandExecutor {
         this.plugin.addMessage(message);
 
         cs.sendMessage(this.strings.getAdded());
+    }
+
+    private boolean handleToken(CommandSender cs, String[] strings, int startIndex) {
+        if (!checkManagePermission(cs)) {
+            return true;
+        }
+
+        int parts = strings.length - startIndex;
+        if (parts == 0) {
+            return false;
+        }
+
+        String name = strings[startIndex];
+
+        if (parts == 1) {
+            this.plugin.removeToken(name);
+            cs.sendMessage(this.strings.getTokenRemoved(name));
+        } else {
+            this.plugin.setToken(name, joinStrings(strings, startIndex + 1));
+            cs.sendMessage(this.strings.getTokenSet(name));
+        }
+
+        return true;
     }
 
     private String joinStrings(String[] strings, int startIndex) {
