@@ -1,11 +1,13 @@
 package pl.panryba.mc.broadcast;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 class BroadcastCommand implements CommandExecutor {
 
@@ -71,6 +73,9 @@ class BroadcastCommand implements CommandExecutor {
             case "token":
                 return handleToken(cs, strings, 1);
 
+            case "tokens":
+                return handleTokens(cs);
+
             default:
                 return false;
         }
@@ -120,6 +125,10 @@ class BroadcastCommand implements CommandExecutor {
             toSend.add((++i) + ". " + message);
         }
 
+        sendList(cs, toSend);
+    }
+
+    private void sendList(CommandSender cs, List<String> toSend) {
         String[] toSendArr = new String[toSend.size()];
         toSend.toArray(toSendArr);
 
@@ -156,6 +165,23 @@ class BroadcastCommand implements CommandExecutor {
             this.plugin.setToken(name, joinStrings(strings, startIndex + 1));
             cs.sendMessage(this.strings.getTokenSet(name));
         }
+
+        return true;
+    }
+
+    private boolean handleTokens(CommandSender cs) {
+        if(!checkListPermission(cs)) {
+            return true;
+        }
+
+        List<String> msgs = new ArrayList<>();
+        msgs.add(this.strings.getTokensTitle());
+
+        for(Map.Entry<String, Object> token : this.api.getTokens().entrySet()) {
+            msgs.add(this.strings.getTokensItem(token.getKey(), token.getValue().toString()));
+        }
+
+        sendList(cs, msgs);
 
         return true;
     }

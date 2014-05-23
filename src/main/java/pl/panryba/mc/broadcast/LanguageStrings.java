@@ -64,4 +64,8 @@ public class LanguageStrings {
     String getTokenRemoved(String name) {
         return String.format(getString("token_removed"), name);
     }
+
+    String getTokensTitle() { return getString("tokens_title"); }
+
+    String getTokensItem(String token, String value) { return String.format(getString("tokens_item"), token, value); }
 }
