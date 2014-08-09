@@ -39,6 +39,7 @@
                       <include>org.antlr:stringtemplate</include>
                     </includes>
                   </artifactSet>
+                  <minimizeJar>true</minimizeJar>
                 </configuration>
               </execution>
             </executions>
