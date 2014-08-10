@@ -1,5 +1,5 @@
 name: FishBroadcast
-version: 1.0
+version: 2.1
 main: pl.panryba.mc.broadcast.Plugin
 commands:
   brc:
