@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import org.stringtemplate.v4.ST;
 
 class Broadcaster {
 
@@ -88,7 +87,7 @@ class Broadcaster {
             return;
         }
 
-        this.preparedMessages = new ArrayList<String>();
+        this.preparedMessages = new ArrayList<>();
 
         for(String message : this.messages) {
             this.preparedMessages.add(processMessage(message));
@@ -100,13 +99,12 @@ class Broadcaster {
     }
 
     private String processMessage(String message) {
-        ST t = new ST(message, this.startDelimiter, this.stopDelimiter);
-
         for(Map.Entry<String, Object> e : tokens.entrySet()) {
-          t.add(e.getKey(), e.getValue());
+            String delimitedToken = this.startDelimiter + e.getKey() + this.stopDelimiter;
+            message = message.replace(delimitedToken, e.getValue().toString());
         }
 
-        return t.render();
+        return message;
     }
 
     Collection<String> getFormattedMessages() {

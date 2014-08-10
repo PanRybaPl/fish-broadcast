@@ -116,10 +116,18 @@ public class BroadcasterTest {
         assertEquals(1, bc.getTokens().size());
 
         bc.broadcast();
-        assertEquals(this.output.getLastOutput(), "Test Token message ", this.output.getLastOutput());
+        assertEquals(this.output.getLastOutput(), "Test Token message $nonexisting$", this.output.getLastOutput());
 
         assertTrue(bc.removeToken("existing"));
         assertEquals(0, bc.getTokens().size());
+    }
+
+    @Test
+    public void testMultipleToken() {
+        bc.addMessage("$test$ $test$");
+        bc.setToken("test", "pass");
+        bc.broadcast();
+        assertEquals(this.output.getLastOutput(), "pass pass", this.output.getLastOutput());
     }
 }
 

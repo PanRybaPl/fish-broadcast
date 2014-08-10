@@ -31,14 +31,6 @@
                   <goal>shade</goal>
                 </goals>
                 <configuration>
-                  <artifactSet>
-                    <includes>
-                      <include>antlr:antlr</include>
-                      <include>org.antlr:ST4</include>
-                      <include>org.antlr:antlr-runtime</include>
-                      <include>org.antlr:stringtemplate</include>
-                    </includes>
-                  </artifactSet>
                   <minimizeJar>true</minimizeJar>
                 </configuration>
               </execution>
@@ -69,10 +61,5 @@
             <artifactId>bukkit</artifactId>
             <version>1.6.2-R1.0</version>
           </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>ST4</artifactId>
-            <version>4.0.7</version>
-        </dependency>
     </dependencies>
 </project>
