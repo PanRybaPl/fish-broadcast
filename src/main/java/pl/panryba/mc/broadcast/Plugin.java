@@ -139,7 +139,9 @@ public class Plugin extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {                
+    public void onEnable() {
+        FishMetrics.onEnabled(this);
+
         this.api = new PluginApi();
 
         FileConfiguration config = getConfig();
